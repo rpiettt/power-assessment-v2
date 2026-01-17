@@ -362,6 +362,11 @@
             .choice-option {
                 min-height: 140px;
                 padding: 20px 16px;
+                align-items: flex-start;
+            }
+            
+            .choice-option > div {
+                width: 100%;
             }
             
             .choice-text {
@@ -733,17 +738,19 @@
             
             currentPairIndex++;
             
-            // Clear selection immediately before loading next pair
+            // Clear selection immediately and force DOM update
             const optionA = document.getElementById('option-a');
             const optionB = document.getElementById('option-b');
             if (optionA) optionA.classList.remove('selected');
             if (optionB) optionB.classList.remove('selected');
             
             if (currentPairIndex < pairs.length) {
-                // Small delay to ensure DOM updates
-                setTimeout(() => {
-                    loadPair();
-                }, 50);
+                // Use requestAnimationFrame to ensure DOM updates before loading next pair
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        loadPair();
+                    });
+                });
             } else {
                 showResults();
             }

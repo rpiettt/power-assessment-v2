@@ -692,10 +692,22 @@
             const progress = ((currentPairIndex) / pairs.length) * 100;
             document.getElementById('progress-bar').style.width = progress + '%';
             
-            // Reset selection
+            // Reset selection - ensure clean state
             selectedOption = null;
-            document.getElementById('option-a').classList.remove('selected');
-            document.getElementById('option-b').classList.remove('selected');
+            const optionA = document.getElementById('option-a');
+            const optionB = document.getElementById('option-b');
+            
+            // Force removal of selected class
+            if (optionA) {
+                optionA.classList.remove('selected');
+                // Force reflow to ensure class removal takes effect
+                void optionA.offsetWidth;
+            }
+            if (optionB) {
+                optionB.classList.remove('selected');
+                // Force reflow to ensure class removal takes effect
+                void optionB.offsetWidth;
+            }
         }
         
         function selectOption(option) {

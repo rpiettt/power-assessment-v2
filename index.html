@@ -126,6 +126,19 @@
             transform: scale(0.98);
         }
         
+        .choice-option.selected {
+            border-color: #081F5D;
+            background: #081F5D;
+            color: white;
+            animation: select-pulse 0.3s ease;
+        }
+        
+        @keyframes select-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
         .choice-text {
             font-size: 1.05rem;
             line-height: 1.6;
@@ -140,6 +153,10 @@
             letter-spacing: 0.1em;
             margin-bottom: 16px;
             color: #9ca3af;
+        }
+        
+        .choice-option.selected .choice-label {
+            color: rgba(255,255,255,0.9);
         }
         
         .next-button {
@@ -692,8 +709,23 @@
             if (selectedOption) return; // Prevent double-clicks
             selectedOption = option;
             
-            // Immediately advance to next question
-            nextPair();
+            // Add visual feedback
+            const selectedEl = document.getElementById('option-' + option);
+            if (selectedEl) selectedEl.classList.add('selected');
+            
+            // Wait for animation, then clear and advance
+            setTimeout(() => {
+                // Remove selected class from both options
+                const optionA = document.getElementById('option-a');
+                const optionB = document.getElementById('option-b');
+                if (optionA) optionA.classList.remove('selected');
+                if (optionB) optionB.classList.remove('selected');
+                
+                // Wait a moment for the class removal to process
+                setTimeout(() => {
+                    nextPair();
+                }, 50);
+            }, 300);
         }
         
         function nextPair() {

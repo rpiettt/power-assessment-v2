@@ -126,19 +126,6 @@
             transform: scale(0.98);
         }
         
-        .choice-option.selected {
-            border-color: #081F5D;
-            background: #081F5D;
-            color: white;
-            animation: select-pulse 0.3s ease;
-        }
-        
-        @keyframes select-pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-        
         .choice-text {
             font-size: 1.05rem;
             line-height: 1.6;
@@ -153,10 +140,6 @@
             letter-spacing: 0.1em;
             margin-bottom: 16px;
             color: #9ca3af;
-        }
-        
-        .choice-option.selected .choice-label {
-            color: rgba(255,255,255,0.9);
         }
         
         .next-button {
@@ -706,22 +689,11 @@
         }
         
         function selectOption(option) {
+            if (selectedOption) return; // Prevent double-clicks
             selectedOption = option;
             
-            // Visual feedback
-            const optionA = document.getElementById('option-a');
-            const optionB = document.getElementById('option-b');
-            
-            if (optionA) optionA.classList.remove('selected');
-            if (optionB) optionB.classList.remove('selected');
-            
-            const selectedEl = document.getElementById('option-' + option);
-            if (selectedEl) selectedEl.classList.add('selected');
-            
-            // Auto-advance after brief delay for visual feedback
-            setTimeout(() => {
-                nextPair();
-            }, 300);
+            // Immediately advance to next question
+            nextPair();
         }
         
         function nextPair() {
@@ -738,19 +710,8 @@
             
             currentPairIndex++;
             
-            // Clear selection immediately and force DOM update
-            const optionA = document.getElementById('option-a');
-            const optionB = document.getElementById('option-b');
-            if (optionA) optionA.classList.remove('selected');
-            if (optionB) optionB.classList.remove('selected');
-            
             if (currentPairIndex < pairs.length) {
-                // Use requestAnimationFrame to ensure DOM updates before loading next pair
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        loadPair();
-                    });
-                });
+                loadPair();
             } else {
                 showResults();
             }
